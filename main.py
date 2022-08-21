@@ -171,13 +171,13 @@ tk.Button(root, text='Exit App', command=root.destroy).grid(row=11, column=0)
 root.mainloop()
 
 
-# netExp(getData(['savings.csv','chequing.csv','credit(1).csv']), 'w', '2021-09', '9', 0, 'all',
-#        ['Internet Banking INTERNET TRANSFER',
-#         'Electronic Funds Transfer GIC Short-Term GIC',
-#         'Branch Transaction CREDIT MEMO IBB CIBC CONESTOGA BANKING CENTRE',
-#         'Branch Transaction DEBIT MEMO IBB CIBC ELECTRONIC BANKING OPERAT',
-#         'Electronic Funds Transfer PREAUTHORIZED DEBIT CIBC CARD PRODUCTS DIVISION',
-#         'Branch Transaction CREDIT MEMO',
-#         'PAYMENT THANK YOU/PAIEMEN T MERCI',
-#         'PRE-AUTHORIZED PAYMENT - THANK YOU',
-#         'Automated Banking Machine US $ DEPOSIT IN CANADIAN $'], 3, 4)
+# Recommended excludes:
+#     Internet Banking INTERNET TRANSFER
+#     Electronic Funds Transfer GIC Short-Term GIC
+#     Branch Transaction CREDIT MEMO IBB CIBC
+#     Branch Transaction DEBIT MEMO IBB CIBC ELECTRONIC BANKING OPERAT
+#     Electronic Funds Transfer PREAUTHORIZED DEBIT CIBC CARD PRODUCTS DIVISION
+#     Branch Transaction CREDIT MEMO
+#     PAYMENT THANK YOU/PAIEMEN T MERCI
+#     PRE-AUTHORIZED PAYMENT - THANK YOU
+#     Automated Banking Machine US $ DEPOSIT IN CANADIAN $
