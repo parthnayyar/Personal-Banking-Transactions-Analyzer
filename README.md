@@ -15,10 +15,10 @@ How to run:
 ## About Excludes
 Excludes are any keywords that you do not want to include in your analysis. For example if you add an exclude "Internet Banking INTERNET TRANSFER", all the transactions with transaction descriptions that include the words "Internet Banking INTERNET TRANSFER" will not be considered during analysis.
 ### Recommended Excludes
-"Internet Banking INTERNET TRANSFER" for internet transfers (eg. transferring money from chequing to savings account)
-"Electronic Funds Transfer GIC Short-Term GIC" for transfer of GIC funds from GIC account to chequing account
-"Branch Transaction CREDIT MEMO" for transferring money internationally
-"PAYMENT THANK YOU/PAIEMEN T MERCI" and "PRE-AUTHORIZED PAYMENT - THANK YOU" for payment of credit cards
-"Branch Transaction DEBIT MEMO"
-"Branch Transaction CREDIT MEMO"
-"Electronic Funds Transfer PREAUTHORIZED DEBIT CIBC CARD PRODUCTS DIVISION"
+1. "Internet Banking INTERNET TRANSFER" for internet transfers (eg. transferring money from chequing to savings account)
+2. "Electronic Funds Transfer GIC Short-Term GIC" for transfer of GIC funds from GIC account to chequing account
+3. "Branch Transaction CREDIT MEMO" for transferring money internationally
+4. "PAYMENT THANK YOU/PAIEMEN T MERCI" and "PRE-AUTHORIZED PAYMENT - THANK YOU" for payment of credit cards
+5. "Branch Transaction DEBIT MEMO"
+6. "Branch Transaction CREDIT MEMO"
+7. "Electronic Funds Transfer PREAUTHORIZED DEBIT CIBC CARD PRODUCTS DIVISION"
