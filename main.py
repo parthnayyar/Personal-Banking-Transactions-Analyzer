@@ -7,12 +7,36 @@ from tkinter import filedialog as fd
 def selectNonCreditFiles():
     filetypes = (('csv files', '*.csv'),('All files', '*.*'))
     global nonCreditFileNames
-    nonCreditFileNames = list(fd.askopenfilenames(title='Select files', initialdir='Z:\Coding\Projects\Manage Money', filetypes=filetypes))
+    nonCreditFileNames = list(fd.askopenfilenames(title='Select non credit transaction files', initialdir='/', filetypes=filetypes))
+
+def showNonCreditFiles():
+    global nonCreditFileNames
+    sncfRoot = tk.Tk()
+    sncfRoot.title('Non Credit Files')
+    if len(nonCreditFileNames) != 0:
+        for i in range(len(nonCreditFileNames)):
+            tk.Label(sncfRoot, text=nonCreditFileNames[i]).grid(row=i, column=0, sticky='W')
+        tk.Button(sncfRoot, text='Close', command=sncfRoot.destroy).grid(row=len(nonCreditFileNames), column=0)
+    else:
+        tk.Label(sncfRoot, text='No files selected').grid(row=0, column=0)
+        tk.Button(sncfRoot, text='Close', command=sncfRoot.destroy).grid(row=1, column=0)
 
 def selectCreditFiles():
     filetypes = (('csv files', '*.csv'),('All files', '*.*'))
     global creditFileNames
-    creditFileNames = list(fd.askopenfilenames(title='Select files', initialdir='Z:\Coding\Projects\Manage Money', filetypes=filetypes))
+    creditFileNames = list(fd.askopenfilenames(title='Select credit transaction files', initialdir='/', filetypes=filetypes))
+
+def showCreditFiles():
+    global creditFileNames
+    scfRoot = tk.Tk()
+    scfRoot.title('Credit Files')
+    if len(creditFileNames) != 0:
+        for i in range(len(creditFileNames)):
+            tk.Label(scfRoot, text=creditFileNames[i]).grid(row=i, column=0, sticky='W')
+        tk.Button(scfRoot, text='Close', command=scfRoot.destroy).grid(row=len(creditFileNames), column=0)
+    else:
+        tk.Label(scfRoot, text='No files selected').grid(row=0, column=0)
+        tk.Button(scfRoot, text='Close', command=scfRoot.destroy).grid(row=1, column=0)
 
 def addExclude():
     global excludesE
@@ -30,15 +54,17 @@ def run():
     modifyCreditFileData(creditFileNames)
     fileNames = creditFileNames + nonCreditFileNames
     if len(fileNames) == 0:
-        tk.Label(root, text='ERROR! No files selected').grid(row=12,column=0)
+        tk.Label(root, text='ERROR! No files selected').grid(row=12, column=0)
+        return
     for file in fileNames:
         try:
             open(file).close()
         except:
-            tk.Label(root, text='ERROR! Invalid files selected').grid(row=12,column=0)
+            tk.Label(root, text='ERROR! Invalid files selected').grid(row=12, column=0)
+            return
     global analyzeE
     global analyze
-    analyze = {'Net expenditure trend': 'net', 'Total expenditure trend': 'tet'}[analyzeE.get()]
+    analyze = analyzeE.get()
     global freqE
     global freq
     freq = freqE.get()
@@ -63,32 +89,41 @@ def run():
 
     if not(isValidStartDate(start)):
         tk.Label(root, text='ERROR! Invalid start date').grid(row=12, column=0)
+        return
     elif not(isValidEndDate(end)):
         tk.Label(root, text='ERROR! Invalid end date').grid(row=12, column=0)
+        return
     elif not(isValidLlimit(llimit)):
         tk.Label(root, text='ERROR! Invalid lower limit').grid(row=12, column=0)
+        return
     elif not(isValidUlimit(ulimit)):
         tk.Label(root, text='ERROR! Invalid upper limit').grid(row=12, column=0)
+        return
     elif pred not in ['1','2','3','4','5']:
-         tk.Label(root, text='ERROR! Invalid number of predictions').grid(row=12, column=0)
+        tk.Label(root, text='ERROR! Invalid number of predictions').grid(row=12, column=0)
+        return
     elif not(isValidExclude(excludes)):
         tk.Label(root, text='ERROR! Invalid excludes added').grid(row=12, column=0)
+        return
     else:
         data = getData(fileNames)
-        print(excludes)
-        if analyze == 'net':
+        if analyze == 'Net expenditure trend':
             netExp(data, freq, start, end, int(llimit), ulimit, excludes, int(pred))
+        else:
+            totalExp(data, freq, start, end, int(llimit), ulimit, excludes, int(pred))
 
 root = tk.Tk()
-root.title('Select Files')
+root.title('Analyze CIBC Transactions')
 
 tk.Label(root, text='Open non-credit accounts transaction files: ').grid(row=0, column=0, sticky='W')
 nonCreditFileNames=[]
-tk.Button(root, text='Choose Files', command=selectNonCreditFiles).grid(row=0, column=1, columnspan=2)
+tk.Button(root, text='Choose Files', command=selectNonCreditFiles).grid(row=0, column=1)
+tk.Button(root, text='Show Chosen Files', command=showNonCreditFiles).grid(row=0, column=2)
 
 tk.Label(root, text='Open credit accounts transaction files: ').grid(row=1, column=0, sticky='W')
 creditFileNames=[]
-tk.Button(root, text='Choose Files', command=selectCreditFiles).grid(row=1, column=1, columnspan=2)
+tk.Button(root, text='Choose Files', command=selectCreditFiles).grid(row=1, column=1)
+tk.Button(root, text='Show Chosen Files', command=showCreditFiles).grid(row=1, column=2)
 
 tk.Label(root, text='How do you want to analyze your transactions?: ').grid(row=2, column=0, sticky='W')
 analyzeE = tk.StringVar(root)
@@ -105,7 +140,7 @@ startE = tk.Entry(root)
 startE.insert(0, '0')
 startE.grid(row=4, column=1, columnspan=2)
 
-tk.Label(root, text='Enter start date (YYYY-MM-DD or "9" to select all): ').grid(row=5, column=0, sticky='W')
+tk.Label(root, text='Enter end date (YYYY-MM-DD or "9" to select all): ').grid(row=5, column=0, sticky='W')
 endE = tk.Entry(root)
 endE.insert(0, '9')
 endE.grid(row=5, column=1, columnspan=2)
@@ -131,7 +166,7 @@ tk.Button(root, text='Add exclude', command=addExclude).grid(row=9, column=1)
 tk.Button(root, text='Delete exclude', command=deleteExclude).grid(row=9, column=2)
 
 tk.Button(root, text='Analyze Data', command=run).grid(row=10, column=0)
-tk.Button(root, text='Exit', command=root.destroy).grid(row=11, column=0)
+tk.Button(root, text='Exit App', command=root.destroy).grid(row=11, column=0)
 
 root.mainloop()
 
