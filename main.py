@@ -1,130 +1,144 @@
 from validateInput import *
 from modifyData import *
 from analyzeTrans import *
+import tkinter as tk
+from tkinter import filedialog as fd
+
+def selectNonCreditFiles():
+    filetypes = (('csv files', '*.csv'),('All files', '*.*'))
+    global nonCreditFileNames
+    nonCreditFileNames = list(fd.askopenfilenames(title='Select files', initialdir='Z:\Coding\Projects\Manage Money', filetypes=filetypes))
+
+def selectCreditFiles():
+    filetypes = (('csv files', '*.csv'),('All files', '*.*'))
+    global creditFileNames
+    creditFileNames = list(fd.askopenfilenames(title='Select files', initialdir='Z:\Coding\Projects\Manage Money', filetypes=filetypes))
+
+def addExclude():
+    global excludesE
+    next_row = 10 + len(excludesE)
+    exclude = tk.Entry(root)
+    exclude.grid(row=next_row, column=1)
+    excludesE.append(exclude)
 
 def run():
-    nonCreditFileNames = input('Enter non-credit accounts transactions file names seperated by "|": ').split('|')
-    creditFileNames = input('Enter credit accounts transactions file names seperated by "|": ').split('|')
-    fileNames = nonCreditFileNames + creditFileNames
-
+    # modifyCreditFileData(creditFileNames)
+    fileNames = creditFileNames + nonCreditFileNames
     if len(fileNames) == 0:
-        print('ERROR! No files selected')
-        return
-
+        tk.Label(root, text='ERROR! No files selected').grid(row=12,column=0)
     for file in fileNames:
         try:
             open(file).close()
         except:
-            print('ERROR! Invalid files selected')
-            return
+            tk.Label(root, text='ERROR! Invalid files selected').grid(row=12,column=0)
+    global analyzeE
+    global analyze
+    analyze = {'Net expenditure trend': 'net', 'Total expenditure trend': 'tet'}[analyzeE.get()]
+    global freqE
+    global freq
+    freq = freqE.get()
+    global startE
+    global start
+    start = startE.get()
+    global endE
+    global end
+    end = endE.get().lower()
+    global llimitE
+    global llimit
+    llimit = llimitE.get()
+    global ulimitE
+    global ulimit
+    ulimit = ulimitE.get()
+    global predE
+    global pred
+    pred = predE.get()
+    global excludesE
+    global excludes
+    excludes = [e.get() for e in excludesE]
 
-    creditFiles = input('\nDid you select a credit account transactions file? (y/n): ').lower()
-    while creditFiles not in ['y','n']:
-        print('Please enter valid input')
-        creditFiles = input('\nDid you select a credit account transactions file? (y/n): ').lower()
-    
-    if creditFiles == 'y':
-        creditFiles = input('Enter credit account transactions files names seperated by "|": ').split('|')
-
-        if len(creditFiles) == 0:
-            print('ERROR! No files selected')
-            return
-        
-        for creditFile in creditFiles:
-            if creditFile not in fileNames:
-                print('ERROR! Invalid files selected')
-                return
-            try:
-                f = open(creditFile)
-                f.close()
-            except:
-                print('ERROR! Invalid files selected')
-                return
-    
-        fileNames = modifyCreditFileData(creditFiles, fileNames)
-
-    data = getData(fileNames)
-
-    analyze = input('\nWhat do you want to see?\nNet expenditure (expenses - earnings) -> "ne"\nTotal expenditure -> "te"\nNet expenditure of a time period -> "net"\nTotal expenditure of a time period -> "tet"\nExit -> "exit"\nEnter input: ').lower()
-    while analyze not in ['ne','te','net','tet','exit']:
-        print('Please enter valid input')
-        analyze = input('\nWhat do you want to see?\nNet expenditure (expenses - earnings) -> "ne"\nTotal expenditure -> "te"\nNet expenditure of a time period -> "net"\nTotal expenditure of a time period -> "tet"\nExit -> "exit"\nEnter input: ').lower()
-
-    if analyze == 'exit':
-        print('Thanks for using Transactions Analyzer')
-        return
-
-    llimit = input('\nEnter lower amount limit or enter "0" to select all: ')
-    while not(isValidLlimit(llimit)):
-        print('Please enter valid input')
-        llimit = input('\nEnter lower amount limit or enter "0" to select all: ')
-
-    ulimit = input('\nEnter upper amount limit or enter "all" to select all: ').lower()
-    while not(isValidUlimit(ulimit)):
-        print('Please enter valid input')
-        ulimit = input('\nEnter upper amount limit or enter "infinite" to select all: ').lower()
-
-    exclude = input('\nEnter any transaction keywords you want to exclude seperated by "|" or leave blank to select all: ')
-    while not(isValidExclude(exclude)):
-        print('Please enter valid input')
-        exclude = input('\nEnter any transaction keywords you want to exclude seperated by "|" or leave blank to select all: ')
-    if exclude == '':
-        exclude = []
+    if not(isValidStartDate(start)):
+        tk.Label(root, text='ERROR! Invalid start date').grid(row=12, column=0)
+    elif not(isValidEndDate(end)):
+        tk.Label(root, text='ERROR! Invalid end date').grid(row=12, column=0)
+    elif not(isValidLlimit(llimit)):
+        tk.Label(root, text='ERROR! Invalid lower limit').grid(row=12, column=0)
+    elif not(isValidUlimit(ulimit)):
+        tk.Label(root, text='ERROR! Invalid upper limit').grid(row=12, column=0)
+    elif pred not in ['1','2','3','4','5']:
+         tk.Label(root, text='ERROR! Invalid number of predictions').grid(row=12, column=0)
+    elif not(isValidExclude(excludes)):
+        tk.Label(root, text='ERROR! Invalid excludes added').grid(row=12, column=0)
     else:
-        exclude = exclude.split('|')
+        # print(fileNames, analyze, freq, start, end, llimit, ulimit, pred, excludes)
+        data = getData(fileNames)
+        if analyze == 'net':
+            netExp(data, freq, start, end, int(llimit), ulimit, excludes, int(pred))
 
-    if analyze in ['ne','te']:
-        freq = input('\nWhat frequency do you want to use?\nWeekly -> "w"\nMonthly -> "m"\nQuarterly -> "q"\nYearly -> "y"\nEnter input: ').lower()
-        while freq not in ['w', 'm', 'q', 'y']:
-            print('Please enter valid input')
-            freq = input('\nWhat frequency do you want to use?\nWeekly -> "w"\nMonthly -> "m"\nQuarterly -> "q"\nYearly -> "y"\nEnter input: ').lower()
+root = tk.Tk()
+root.title('Select Files')
 
-        start = input('\nEnter start date (YYYY-MM-DD) or enter "0" to select all: ')
-        while not (isValidStartDate(start)):
-            print('Please enter valid input')
-            start = input('\nEnter start date (YYYY-MM-DD) or enter "0" to select all: ')
+tk.Label(root, text='Open non-credit accounts transaction files: ').grid(row=0, column=0, sticky='W')
+nonCreditFileNames=[]
+tk.Button(root, text='Choose Files', command=selectNonCreditFiles).grid(row=0, column=1)
 
-        end = input('\nEnter end date (YYYY-MM-DD) or enter "9" to select all: ')
-        while not (isValidEndDate(end)):
-            print('Please enter valid input')
-            end = input('\nEnter end date (YYYY-MM-DD) or enter "0" to select all: ')
+tk.Label(root, text='Open credit accounts transaction files: ').grid(row=1, column=0, sticky='W')
+creditFileNames=[]
+tk.Button(root, text='Choose Files', command=selectCreditFiles).grid(row=1, column=1)
 
-        order = input('\nEnter order of accuracy between 1 and 4: ')
-        while order not in ['1','2','3','4']:
-            print('Please enter valid input')
-            order = input('\nEnter order of accuracy (1-4): ')
+# fileNames = nonCreditFileNames + creditFiles
 
-        pred = input('\nHow many predictions do you want to see? (1-4): ')
-        while pred not in ['1','2','3','4']:
-            print('Please enter valid input')
-            pred = input('\nHow many predictions do you want to see? (1-4): ')
+tk.Label(root, text='How do you want to analyze your transactions?: ').grid(row=2, column=0, sticky='W')
+analyzeE = tk.StringVar(root)
+analyzeE.set('Net expenditure trend')
+tk.OptionMenu(root, analyzeE, 'Net expenditure trend', 'Total expenditure trend').grid(row=2, column=1)
+# analyze = {'Net expenditure trend' : 'net', 'Total expenditure trend' : 'tet'}[analyze.get()]
 
-    else:
-        freq = input('\nWhat time period do you want to use?\n1 Week -> "w"\n1 Monthly -> "m"\n1 Quarter -> "q"\n1 Year -> "y"\nEnter input: ').lower()
-        while freq not in ['w', 'm', 'q', 'y']:
-            print('Please enter valid input')
-            freq = input('\nWhat time period do you want to use?\n1 Week -> "w"\n1 Monthly -> "m"\n1 Quarter -> "q"\n1 Year -> "y"\nEnter input: ').lower()
+tk.Label(root, text='What frequency do you want to use?').grid(row=3, column=0, sticky='W')
+freqE = tk.StringVar(root)
+freqE.set('Weekly')
+tk.OptionMenu(root, freqE, 'Weekly', 'Monthly', 'Quarterly', 'Yearly').grid(row=3, column=1)
+# freq = freq.get()
 
-        freqYear = input('\nEnter year: ')
-        while not(isValidYear(freqYear)):
-            print('Please enter valid input')
-            freqYear = input('\nEnter year: ')
+tk.Label(root, text='Enter start date (YYYY-MM-DD or "0" to select all): ').grid(row=4, column=0, sticky='W')
+startE = tk.Entry(root)
+startE.insert(0, '0')
+startE.grid(row=4, column=1)
+# start=start.get()
 
-        if freq != 'year':
-            freqNum = input('Enter ' + freqMap[freq].replace('Value', '') + ' number: ')
-        else:
-            freqNum = freqYear
+tk.Label(root, text='Enter start date (YYYY-MM-DD or "9" to select all): ').grid(row=5, column=0, sticky='W')
+endE = tk.Entry(root)
+endE.insert(0, '9')
+endE.grid(row=5, column=1)
+# end=end.get().lower()
 
-    if analyze == 'ne':
-        netExp(data, freq, start, end, int(llimit), ulimit, exclude, int(order), int(pred))
-    elif analyze == 'te':
-        exp(data, freq, start, end, int(llimit), ulimit, exclude, int(order), int(pred))
-    elif analyze == 'net':
-        netExpData(data, freqYear, freq, freqNum, int(llimit), ulimit, exclude)
-    else:
-        expData(data, freqYear, freq, freqNum, int(llimit), ulimit, exclude)
+tk.Label(root, text='Enter lower limit (or "0" to select all): ').grid(row=6, column=0, sticky='W')
+llimitE = tk.Entry(root)
+llimitE.insert(0, '0')
+llimitE.grid(row=6, column=1)
+# llimit=llimit.get()
 
-run()
+tk.Label(root, text='Enter upper limit (or "all" to select all): ').grid(row=7, column=0, sticky='W')
+ulimitE = tk.Entry(root)
+ulimitE.insert(0, 'all')
+ulimitE.grid(row=7, column=1)
+# ulimit=ulimit.get()
+
+tk.Label(root, text='Enter number of predictions (1-5): ').grid(row=8, column=0, sticky='W')
+predE = tk.Entry(root)
+predE.insert(0, '3')
+predE.grid(row=8, column=1)
+# pred=pred.get()
+
+tk.Label(root, text='Enter any terms you want to exclude: ').grid(row=9, column=0, sticky='W')
+excludesE = []
+tk.Button(root, text='Add exclude', command=addExclude).grid(row=9, column=1)
+
+tk.Button(root, text='Analyze Data', command=run).grid(row=10, column=0)
+tk.Button(root, text='Exit', command=root.destroy).grid(row=11, column=0)
+
+root.mainloop()
+
+
 # netExp(getData(['savings.csv','chequing.csv','credit(1).csv']), 'w', '2021-09', '9', 0, 'all',
 #        ['Internet Banking INTERNET TRANSFER',
 #         'Electronic Funds Transfer GIC Short-Term GIC',

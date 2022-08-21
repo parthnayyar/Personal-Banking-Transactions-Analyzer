@@ -29,31 +29,28 @@ def getPredictions(coeff, freq, count):
         pass
 
     predictions = []
-    order = len(coeff)
 
     for i in range(count):
         curVal_i = curVal + i / frequency
         val = 0
-        for j in range(order):
-            val += coeff[j] * curVal_i ** (order - 1 - j)
+        for j in range(3):
+            val += coeff[j] * curVal_i ** (2 - j)
         predictions.append(val)
 
     return predictions
 
 freqMap = {
-    'w': 'weekValue',
-    'm': 'monthValue',
-    'q': 'quarterValue',
-    'y': 'yearValue'
+    'Weekly': 'weekValue',
+    'Monthly': 'monthValue',
+    'Quarterly': 'quarterValue',
+    'Yearly': 'yearValue'
 }
 
-def netExp(df, freq, start, end, llimit, ulimit, exclude, order, predict):
-    if freq not in freqMap.keys():
-        raise ValueError('ERROR! Specify valid frequency')
+def netExp(df, freq, start, end, llimit, ulimit, exclude, predict):
 
     df = df[(df['dateStr'] >= start) & (df['dateStr'] <= end) & (df['amountSpent'] >= llimit) & (df['amountEarned'] >= llimit)]
     if ulimit != 'all':
-        df = df[(df['amountSpent'] <= ulimit) & (df['amountEarned'] <= ulimit)]
+        df = df[(df['amountSpent'] <= int(ulimit)) & (df['amountEarned'] <= int(ulimit))]
     for e in exclude:
         df = df[~df['transactionDescription'].str.match('.*' + e + '.*')]
 
@@ -64,10 +61,10 @@ def netExp(df, freq, start, end, llimit, ulimit, exclude, order, predict):
     t = np.array(df[freqMap[freq]].unique().tolist())
     exp = np.array(netExpdf.tolist())
 
-    coeff = tuple(np.polyfit(t, exp, order - 1))
+    coeff = tuple(np.polyfit(t, exp, 2))
     fit = 0
-    for i in range(order):
-        fit += coeff[i] * t ** (order - 1 - i)
+    for i in range(3):
+        fit += coeff[i] * t ** (2 - i)
 
     predictions = getPredictions(coeff, freq, predict)
     for i in range(predict):
