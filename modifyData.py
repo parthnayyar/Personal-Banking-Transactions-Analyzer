@@ -1,28 +1,12 @@
 import pandas as pd
 import csv
 
-def modifyCreditFileData(creditFiles, allFiles):
-    # f = pd.read_csv('test.csv', names = ['A', 'B', 'C', 'D', 'E'], header = None)
-    # keep_col = ['A', 'B', 'C', 'D']
-    # new_f = f[keep_col]
-    # new_f.to_csv("newFile.csv", index = False, header = False)
-
-    for i in range(len(creditFiles)):
-        ind = allFiles.index(creditFiles[i])
-        newFile = creditFiles[i][:-4] + '(1).csv'
-        if newFile in allFiles:
-            newFile = creditFiles[i][:-4] + '1.csv'
-            if newFile in allFiles:
-                newFile = creditFiles[i][:-4] + '_1.csv'
-        with open(creditFiles[i]) as source:
-            reader = csv.reader(source)
-            with open(newFile, 'w', newline='') as result:
-                writer = csv.writer(result)
-                for r in reader:
-                    writer.writerow(r[:4])
-
-        allFiles[ind] = newFile
-    return allFiles
+def modifyCreditFileData(creditFiles):
+    for creditFile in creditFiles:
+        f = pd.read_csv(creditFile, names = ['A', 'B', 'C', 'D', 'E'], header = None)
+        keep_col = ['A', 'B', 'C', 'D']
+        new_f = f[keep_col]
+        new_f.to_csv(creditFile, index = False, header = False)
 
 def getData(fileNames):
 
