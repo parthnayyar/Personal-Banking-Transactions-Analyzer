@@ -249,30 +249,3 @@ def totalExp(df, freq, start, end, llimit, ulimit, exclude, predict):
     tk.Button(root, text='Show graph', command=showPlot).grid(row=predict + 1, column=0)
     tk.Button(root, text='Close', command=root.destroy).grid(row=predict + 2, column=0)
     root.mainloop()
-
-
-
-def netExpData(df, year, freq, freqNum, llimit, ulimit, exclude):
-    df = df[(df['year'] == int(year)) &
-            (df[freqMap[freq].replace('Value', '')] == int(freqNum)) &
-            (df['amountSpent'] >= llimit) &
-            (df['amountEarned'] >= llimit)]
-    if ulimit != 'all':
-        df = df[(df['amountSpent'] <= int(ulimit)) &
-                (df['amountEarned'] <= int(ulimit))]
-    print(df)
-    for e in exclude:
-        e = '.*' + e + '.*'
-        df = df[not(df['transactionDescription'].str.match(e))]
-    print('This ' + freqMap[freq].replace('Value', '') + "'s net expenditure:",round(df['amountSpent'].sum() - df['amountEarned'].sum()))
-
-def expData(df, year, freq, freqNum, llimit, ulimit, exclude):
-    df = df[(df['year'] == int(year)) &
-            (df[freqMap[freq].replace('Value', '')] == int(freqNum)) &
-            (df['amountSpent'] >= llimit)]
-    if ulimit != 'all':
-        df = df[(df['amountSpent'] <= int(ulimit))]
-    for e in exclude:
-        e = '.*' + e + '.*'
-        df = df[not(df['transactionDescription'].str.match(e))]
-    print('This ' + freqMap[freq].replace('Value', '') + "'s total expenditure:", round(df['amountSpent'].sum()))
