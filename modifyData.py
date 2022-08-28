@@ -35,13 +35,13 @@ def getData(fileNames):
     df['yearValue'] = df['year']
 
     df['quarter'] = pd.to_numeric(pd.DatetimeIndex(df['date']).quarter, downcast='integer')
-    df['quarterValue'] = df['yearValue'] + df['quarter'] / 4
+    df['quarterValue'] = round(df['yearValue'] + df['quarter'] / 4, 3)
 
     df['month'] = pd.to_numeric(pd.DatetimeIndex(df['date']).month, downcast='integer')
-    df['monthValue'] = df['yearValue'] + df['month'] / 12
+    df['monthValue'] = round(df['yearValue'] + df['month'] / 12, 3)
 
     df['week'] = pd.to_numeric(df['date'].dt.isocalendar().week, downcast='integer')
-    df['weekValue'] = df['yearValue'] + df['week'] / 52
+    df['weekValue'] = round(df['yearValue'] + df['week'] / 52, 3)
 
     df = df.sort_values('date')
     return df

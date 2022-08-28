@@ -20,7 +20,7 @@ def isValidEndDate(s):
 
 def isValidLlimit(s):
     try:
-        amount = int(s)
+        amount = float(s)
         if amount >= 0:
             return True
         return False
@@ -31,7 +31,7 @@ def isValidUlimit(s):
     if s == 'all':
         return True
     try:
-        amount = int(s)
+        amount = float(s)
         if amount >= 0:
             return True
         return False

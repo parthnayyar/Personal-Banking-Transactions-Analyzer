@@ -108,9 +108,9 @@ def run():
     else:
         data = getData(fileNames)
         if analyze == 'Net expenditure trend':
-            netExp(data, freq, start, end, int(llimit), ulimit, excludes, int(pred))
+            netExp(data, freq, start, end, float(llimit), ulimit, excludes, int(pred))
         else:
-            totalExp(data, freq, start, end, int(llimit), ulimit, excludes, int(pred))
+            totalExp(data, freq, start, end, float(llimit), ulimit, excludes, int(pred))
 
 root = tk.Tk()
 root.title('Analyze CIBC Transactions')
