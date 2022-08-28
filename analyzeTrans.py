@@ -99,8 +99,7 @@ def netExp(df, freq, start, end, llimit, ulimit, exclude, predict):
 
         cursor = Cursor(ax, horizOn=True, vertOn=True, useblit=True, c='green')
         annot = ax.annotate(text="", xy=(0,0), xytext=(0,0), textcoords='offset points',
-                            bbox={'boxstyle':'round4', 'fc':'linen', 'ec':'k', 'lw':1},
-                            arrowprops={'arrowstyle':'-|>'})
+                            bbox={'boxstyle':'round4', 'fc':'linen', 'ec':'k', 'lw':1})
 
         def onClick(event):
             x = event.xdata
@@ -131,7 +130,7 @@ def netExp(df, freq, start, end, llimit, ulimit, exclude, predict):
             fig.canvas.draw()
         fig.canvas.mpl_connect('button_press_event', onClick)
 
-        ax.legend(['Expenditure', 'Best Fit'])
+        ax.legend(['Expenditure', 'Trend'])
         ax.axhline(y=0, color='black', ls='--')
         plt.xlabel('Time')
         plt.ylabel('Net Expenditure')
@@ -233,7 +232,7 @@ def totalExp(df, freq, start, end, llimit, ulimit, exclude, predict):
 
         fig.canvas.mpl_connect('button_press_event', onClick)
 
-        ax.legend(['Expenditure', 'Best Fit'])
+        ax.legend(['Expenditure', 'Trend'])
         ax.axhline(y=0, color='black', ls='--')
         plt.xlabel('Time')
         plt.ylabel('Total Expenditure')
