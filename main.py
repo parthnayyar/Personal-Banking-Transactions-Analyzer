@@ -99,9 +99,6 @@ def run():
     elif not(isValidUlimit(ulimit)):
         tk.Label(root, text='ERROR! Invalid upper limit').grid(row=12, column=0)
         return
-    elif pred not in ['1','2','3','4','5']:
-        tk.Label(root, text='ERROR! Invalid number of predictions').grid(row=12, column=0)
-        return
     elif not(isValidExclude(excludes)):
         tk.Label(root, text='ERROR! Invalid excludes added').grid(row=12, column=0)
         return
@@ -145,22 +142,22 @@ endE = tk.Entry(root)
 endE.insert(0, '9')
 endE.grid(row=5, column=1, columnspan=2)
 
-tk.Label(root, text='Enter lower limit (or "0" to select all): ').grid(row=6, column=0, sticky='W')
+tk.Label(root, text='Enter lower limit for amount (or "0" to select all): ').grid(row=6, column=0, sticky='W')
 llimitE = tk.Entry(root)
 llimitE.insert(0, '0')
 llimitE.grid(row=6, column=1, columnspan=2)
 
-tk.Label(root, text='Enter upper limit (or "all" to select all): ').grid(row=7, column=0, sticky='W')
+tk.Label(root, text='Enter upper limit for amount (or "all" to select all): ').grid(row=7, column=0, sticky='W')
 ulimitE = tk.Entry(root)
 ulimitE.insert(0, 'all')
 ulimitE.grid(row=7, column=1, columnspan=2)
 
 tk.Label(root, text='Enter number of predictions (1-5): ').grid(row=8, column=0, sticky='W')
-predE = tk.Entry(root)
-predE.insert(0, '3')
-predE.grid(row=8, column=1, columnspan=2)
+predE = tk.StringVar(root)
+predE.set('3')
+tk.OptionMenu(root, predE, '1','2','3','4','5').grid(row=8, column=1, columnspan=2)
 
-tk.Label(root, text='Enter any terms you want to exclude: ').grid(row=9, column=0, sticky='W')
+tk.Label(root, text='Enter any transactions you want to exclude: ').grid(row=9, column=0, sticky='W')
 excludesE = []
 tk.Button(root, text='Add exclude', command=addExclude).grid(row=9, column=1)
 tk.Button(root, text='Delete exclude', command=deleteExclude).grid(row=9, column=2)

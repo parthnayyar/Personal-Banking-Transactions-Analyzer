@@ -4,9 +4,9 @@ def isValidStartDate(s):
     if s == '0':
         return True
     try:
-        dt.datetime.strptime(s, '%Y-%m-%d')
-        today = dt.now().strftime("%Y-%m-%d")
-        if s > today:
+        s = dt.datetime.strptime(s, '%Y-%m-%d').strftime("%Y-%m-%d")
+        now = dt.datetime.now().strftime("%Y-%m-%d")
+        if s > now:
             return False
         return True
     except:
@@ -16,9 +16,9 @@ def isValidEndDate(s):
     if s == '9':
         return True
     try:
-        dt.datetime.strptime(s, '%Y-%m-%d')
-        today = dt.now().strftime("%Y-%m-%d")
-        if s > today:
+        s = dt.datetime.strptime(s, '%Y-%m-%d').strftime("%Y-%m-%d")
+        now = dt.datetime.now().strftime("%Y-%m-%d")
+        if s > now:
             return False
         return True
     except:

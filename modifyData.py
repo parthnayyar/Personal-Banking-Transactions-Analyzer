@@ -4,7 +4,7 @@ import csv
 def modifyCreditFileData(creditFiles):
     for creditFile in creditFiles:
         f = pd.read_csv(creditFile, names=['date', 'desc', 'deb', 'cred', 'card#'], header=None)
-        new_f = f['date', 'desc', 'deb', 'cred']
+        new_f = f[['date', 'desc', 'deb', 'cred']]
         new_f.to_csv(creditFile, index=False, header=False)
 
 def getData(fileNames):
