@@ -20,4 +20,4 @@ Excludes are any keywords that you do not want to include in your analysis. For 
 6. "Branch Transaction CREDIT MEMO"
 7. "Electronic Funds Transfer PREAUTHORIZED DEBIT CIBC CARD PRODUCTS DIVISION"
 
-![image](https://user-images.githubusercontent.com/97373046/211204043-840ea771-9137-4d58-a730-14700977998a.png)
+![image](https://user-images.githubusercontent.com/97373046/211204043-840ea771-9137-4d58-a730-14700977998a.png =300x250)
