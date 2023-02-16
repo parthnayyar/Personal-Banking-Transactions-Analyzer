@@ -85,6 +85,7 @@ def netExp(df, freq, start, end, llimit, ulimit, exclude, predict):
     def showPlot():
 
         fig = plt.figure()
+        fig.canvas.set_window_title(freq+" Transactions")
         ax = fig.subplots()
         ax.plot(netExpS)
         ax.plot(t, fit, c='red', ls=':')

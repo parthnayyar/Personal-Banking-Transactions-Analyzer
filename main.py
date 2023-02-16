@@ -110,7 +110,7 @@ def run():
             totalExp(data, freq, start, end, float(llimit), ulimit, excludes, int(pred))
 
 root = tk.Tk()
-root.title('Analyze CIBC Transactions')
+root.title('Analyze Your Transactions')
 
 tk.Label(root, text='Open non-credit accounts transaction files: ').grid(row=0, column=0, sticky='W')
 nonCreditFileNames=[]
