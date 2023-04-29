@@ -14,11 +14,12 @@ Excludes are any keywords that you do not want to include in your analysis. For 
 ### Recommended Excludes
 1. "Internet Banking INTERNET TRANSFER" for internet transfers (eg. transferring money from chequing to savings account)
 2. "Electronic Funds Transfer GIC Short-Term GIC" for transfer of GIC funds from GIC account to chequing account
-3. "Branch Transaction CREDIT MEMO" for transferring money internationally
-4. "PAYMENT THANK YOU/PAIEMEN T MERCI" and "PRE-AUTHORIZED PAYMENT - THANK YOU" for payment of credit cards
-5. "Branch Transaction DEBIT MEMO"
-6. "Branch Transaction CREDIT MEMO"
-7. "Electronic Funds Transfer PREAUTHORIZED DEBIT CIBC CARD PRODUCTS DIVISION"
+3. "Electronic Funds Transfer DEPOSIT CANADA"
+4. "Branch Transaction CREDIT MEMO" for transferring money internationally
+5. "PAYMENT THANK YOU/PAIEMEN T MERCI" and "PRE-AUTHORIZED PAYMENT - THANK YOU" for payment of credit cards
+6. "Branch Transaction DEBIT MEMO"
+7. "Branch Transaction CREDIT MEMO"
+8. "Electronic Funds Transfer PREAUTHORIZED DEBIT CIBC CARD PRODUCTS DIVISION"
 
 <img src="https://user-images.githubusercontent.com/97373046/219493795-940d620d-7e40-4f8b-98b6-e21a34d1b0ae.png" width="300" height="300">
 <img src="https://user-images.githubusercontent.com/97373046/219493859-b47095a5-9abf-4c9d-9339-638697a67b1d.png" width="100" height="150">
