@@ -54,6 +54,20 @@ frequencyMap = {
     'Quarterly': 4,
     'Yearly': 1
 }
+monthMap = {
+    1: "January",
+    2: "February",
+    3: "March",
+    4: "April",
+    5: "May",
+    6: "June",
+    7: "July",
+    8: "August",
+    9: "September",
+    10: "October",
+    11: "November",
+    12: "December"
+}
 
 def netExp(df, freq, start, end, llimit, ulimit, exclude, predict):
     df = df[(df['dateStr'] >= start) & (df['dateStr'] <= end) & ((df['amountSpent'] + df['amountEarned']) >= llimit)]
@@ -113,11 +127,15 @@ def netExp(df, freq, start, end, llimit, ulimit, exclude, predict):
                 x = round(year + freqNum / frequencyMap[freq], 3)
                 netExpVal = str(netExpS[x])
                 y = float(netExpVal)
+                if freq == 'Monthly':
+                    freqNum = monthMap[freqNum]
+                else:
+                    freqNum = str(freqNum)
                 if netExpVal[0] == '-':
                     netExpVal = netExpVal[1:]
-                    annot.set_text('Year: ' + str(year) + '\n' + freq[:-2] + ': ' + str(freqNum) + '\nNet Expenditure: -$' + netExpVal)
+                    annot.set_text('Year: ' + str(year) + '\n' + freq[:-2] + ': ' + freqNum + '\nNet Expenditure: -$' + netExpVal)
                 else:
-                    annot.set_text('Year: ' + str(year) + '\n' + freq[:-2] + ': ' + str(freqNum) + '\nNet Expenditure: $' + netExpVal)
+                    annot.set_text('Year: ' + str(year) + '\n' + freq[:-2] + ': ' + freqNum + '\nNet Expenditure: $' + netExpVal)
             else:
                 x = year
                 netExpVal = str(netExpS[x])
@@ -140,10 +158,9 @@ def netExp(df, freq, start, end, llimit, ulimit, exclude, predict):
 
     root = tk.Tk()
     root.title('Your Predictions')
-    if predict != 0:
-        tk.Label(root, text='Predictions', font='Helvetica 18 bold underline').grid(row=0, column=0)
-        for i in range(predict):
-            tk.Label(root, text=predOut[i]).grid(row=i+1, column=0, sticky='W')
+    tk.Label(root, text='Predictions', font='Helvetica 18 bold underline').grid(row=0, column=0)
+    for i in range(predict):
+        tk.Label(root, text=predOut[i]).grid(row=i+1, column=0, sticky='W')
     tk.Button(root, text='Show graph', command=showPlot).grid(row=predict+1, column=0)
     tk.Button(root, text='Close', command=root.destroy).grid(row=predict+2, column=0)
     root.mainloop()
@@ -191,16 +208,7 @@ def totalExp(df, freq, start, end, llimit, ulimit, exclude, predict):
 
         cursor = Cursor(ax, horizOn=True, vertOn=True, useblit=True, c='green')
         annot = ax.annotate(text="", xy=(0, 0), xytext=(0, 0), textcoords='offset points',
-                            bbox={
-                                'boxstyle': 'round4',
-                                'fc': 'linen',
-                                'ec': 'k',
-                                'lw': 1
-                            },
-                            arrowprops={
-                                'arrowstyle': '-|>'
-                            })
-
+                            bbox={'boxstyle': 'round4', 'fc': 'linen', 'ec': 'k', 'lw': 1})
         def onClick(event):
             x = event.xdata
             year = math.floor(float(x))
@@ -212,13 +220,15 @@ def totalExp(df, freq, start, end, llimit, ulimit, exclude, predict):
                 x = round(year + freqNum / frequencyMap[freq], 3)
                 totalExpVal = str(totalExpS[x])
                 y = float(totalExpVal)
+                if freq == 'Monthly':
+                    freqNum = monthMap[freqNum]
+                else:
+                    freqNum = str(freqNum)
                 if totalExpVal[0] == '-':
                     totalExpVal = totalExpVal[1:]
-                    annot.set_text('Year: ' + str(year) + '\n' + freq[:-2] + ': ' + str(
-                        freqNum) + '\nTotal Expenditure: -$' + totalExpVal)
+                    annot.set_text('Year: ' + str(year) + '\n' + freq[:-2] + ': ' + freqNum + '\nTotal Expenditure: -$' + totalExpVal)
                 else:
-                    annot.set_text('Year: ' + str(year) + '\n' + freq[:-2] + ': ' + str(
-                        freqNum) + '\nTotal Expenditure: $' + totalExpVal)
+                    annot.set_text('Year: ' + str(year) + '\n' + freq[:-2] + ': ' + freqNum + '\nTotal Expenditure: $' + totalExpVal)
             else:
                 x = year
                 totalExpVal = str(totalExpS[x])
@@ -242,10 +252,9 @@ def totalExp(df, freq, start, end, llimit, ulimit, exclude, predict):
 
     root = tk.Tk()
     root.title('Your Predictions')
-    if predict != 0:
-        tk.Label(root, text='Predictions', font='Helvetica 18 bold underline').grid(row=0, column=0)
-        for i in range(predict):
-            tk.Label(root, text=predOut[i]).grid(row=i + 1, column=0, sticky='W')
+    tk.Label(root, text='Predictions', font='Helvetica 18 bold underline').grid(row=0, column=0)
+    for i in range(predict):
+        tk.Label(root, text=predOut[i]).grid(row=i + 1, column=0, sticky='W')
     tk.Button(root, text='Show graph', command=showPlot).grid(row=predict + 1, column=0)
     tk.Button(root, text='Close', command=root.destroy).grid(row=predict + 2, column=0)
     root.mainloop()
